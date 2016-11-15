@@ -1,0 +1,13 @@
+---
+buildName: "orders-service"
+codeReview: false
+links:
+  Git: "http://192.168.64.16:31052/gogsadmin/orders-service"
+  Job: "http://192.168.64.16:32268/job/orders-service"
+  Production: "http://172.30.71.20:80/kubernetes/pods?namespace=default-prod"
+  Staging: "http://172.30.71.20:80/kubernetes/pods?namespace=default-staging"
+  Testing: "http://172.30.71.20:80/kubernetes/pods?namespace=default-testing"
+environments:
+  Testing: "default-testing"
+  Staging: "default-staging"
+  Production: "default-prod"
