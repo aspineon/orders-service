@@ -68,6 +68,9 @@ podTemplate(label: label, serviceAccount: 'jenkins', containers: [
 //      }
 
       stage 'Rollout Staging'
+      sh "mvn -Pdb-migration-mysql liquibase:status -Dliquibase.url=jdbc:mysql://mysqlorders.${envStage}:3306/ticketmonster"
+      sh "mvn -Pdb-migration-mysql liquibase:diff -Dliquibase.url=jdbc:mysql://mysqlorders.${envStage}:3306/ticketmonster"
+
       kubernetesApply(environment: envStage)
 
       stage 'Approve'
