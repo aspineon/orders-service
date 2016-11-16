@@ -479,7 +479,7 @@
             <configuration>
               <changeLogFile>src/main/liquibase/master.yaml</changeLogFile>
               <driver>com.mysql.jdbc.Driver</driver>
-              <url>jdbc:mysql://localhost:3306/ticketmonster</url>
+              <!--<url>jdbc:mysql://localhost:3306/ticketmonster</url>-->
               <username>ticket</username>
               <password>monster</password>
             </configuration>

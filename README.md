@@ -53,10 +53,10 @@ mysql> drop database ticketmonster; create database ticketmonster;
 ```
 
 ```
-mvn -Pdb-migration-mysql liquibase:update
-mvn -Pdb-migration-mysql liquibase:updateSQL
-mvn -Pdb-migration-mysql liquibase:status
-mvn -Pdb-migration-mysql liquibase:tag -Dliquibase.tag=v2.0
+mvn -Pdb-migration-mysql liquibase:update -Dliquibase.url=http://localhost:3306
+mvn -Pdb-migration-mysql liquibase:updateSQL -Dliquibase.url=http://localhost:3306
+mvn -Pdb-migration-mysql liquibase:status -Dliquibase.url=http://localhost:3306
+mvn -Pdb-migration-mysql liquibase:tag -Dliquibase.tag=v2.0 -Dliquibase.url=http://localhost:3306
 ```
 
 Automatically discover diffs between the existing schema and what Hibernate sees currently
