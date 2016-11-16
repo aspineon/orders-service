@@ -59,7 +59,7 @@ podTemplate(label: label, serviceAccount: 'jenkins', containers: [
 
       stage 'Integration Testing'
       // let's deploy the database if it's not already there
-      kubernetesApply(file: 'mysql-kubernetes.yml', environment: envTest)
+      kubernetesApply(file: readFile('mysql-kubernetes.yml'), environment: envTest)
       mavenIntegrationTest {
         environment = 'Testing'
         failIfNoTests = localFailIfNoTests
