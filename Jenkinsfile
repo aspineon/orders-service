@@ -42,6 +42,7 @@ podTemplate(label: label, serviceAccount: 'jenkins', containers: [
                 [$class: 'HostPathVolume', mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock']
         ]) {
   node(label) {
+    def envTest = utils.environmentNamespace('testing')
     def envStage = utils.environmentNamespace('staging')
     def envProd = utils.environmentNamespace('production')
 
@@ -58,7 +59,7 @@ podTemplate(label: label, serviceAccount: 'jenkins', containers: [
 
       stage 'Integration Testing'
       // let's deploy the database if it's not already there
-      kubernetesApply(file: 'mysql-kubernetes.yml')
+      kubernetesApply(file: 'mysql-kubernetes.yml', environment: envTest)
       mavenIntegrationTest {
         environment = 'Testing'
         failIfNoTests = localFailIfNoTests
