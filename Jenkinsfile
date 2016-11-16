@@ -59,14 +59,16 @@ podTemplate(label: label, serviceAccount: 'jenkins', containers: [
 
       stage 'Integration Testing'
       // let's deploy the database if it's not already there
-      kubernetesApply(file: readFile('mysql-kubernetes.yml'), environment: envTest)
-      mavenIntegrationTest {
-        environment = 'Testing'
-        failIfNoTests = localFailIfNoTests
-        itestPattern = localItestPattern
-      }
+      // todo: come back and add int testing
+//      kubernetesApply(file: readFile('mysql-kubernetes.yml'), environment: envTest)
+//      mavenIntegrationTest {
+//        environment = 'Testing'
+//        failIfNoTests = localFailIfNoTests
+//        itestPattern = localItestPattern
+//      }
 
       stage 'Rollout Staging'
+      kubernetesApply(file: readFile('mysql-kubernetes.yml'), environment: envTest)
       kubernetesApply(environment: envStage)
 
       stage 'Approve'
@@ -78,6 +80,7 @@ podTemplate(label: label, serviceAccount: 'jenkins', containers: [
       }
 
       stage 'Rollout Production'
+      kubernetesApply(file: readFile('mysql-kubernetes.yml'), environment: envTest)
       kubernetesApply(environment: envProd)
 
     }
