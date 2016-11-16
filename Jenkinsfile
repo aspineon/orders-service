@@ -68,7 +68,7 @@ podTemplate(label: label, serviceAccount: 'jenkins', containers: [
 //      }
 
       stage 'Rollout Staging'
-      kubernetesApply(file: readFile('mysql-kubernetes.yml'), environment: envTest)
+      kubernetesApply(file: readFile('mysql-kubernetes.yml'), environment: envStage)
       kubernetesApply(environment: envStage)
 
       stage 'Approve'
@@ -80,7 +80,7 @@ podTemplate(label: label, serviceAccount: 'jenkins', containers: [
       }
 
       stage 'Rollout Production'
-      kubernetesApply(file: readFile('mysql-kubernetes.yml'), environment: envTest)
+      kubernetesApply(file: readFile('mysql-kubernetes.yml'), environment: envProd)
       kubernetesApply(environment: envProd)
 
     }
