@@ -1,5 +1,5 @@
 #!/usr/bin/groovy
-@Library('github.com/fabric8io/fabric8-pipeline-library@master')
+@Library('github.com/christian-posta/fabric8-pipeline-library@ceposta-db')
 
 def localItestPattern = ""
 try {
@@ -53,9 +53,12 @@ podTemplate(label: label, serviceAccount: 'jenkins', containers: [
       stage 'Build Release'
       mavenCanaryRelease {
         version = canaryVersion
+        profiles = '-Pmysql'
       }
 
       stage 'Integration Testing'
+      // let's deploy the database if it's not already there
+      kubernetesApply(file: 'mysql-kubernetes.yml')
       mavenIntegrationTest {
         environment = 'Testing'
         failIfNoTests = localFailIfNoTests
