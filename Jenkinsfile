@@ -85,6 +85,7 @@ podTemplate(label: label, serviceAccount: 'jenkins', containers: [
       // wait for approval to proceed
       input id: 'DBProceed', message: "Please check the DB updates you want to apply"
       sh "mvn -Pdb-migration-mysql liquibase:update -Dliquibase.url=jdbc:mysql://mysqlorders.default-staging:3306/ticketmonster -Dliquibase.promptOnNonLocalDatabase=false"
+      sh "mvn -Pdb-migration-mysql liquibase:tag -Dliquibase.url=jdbc:mysql://mysqlorders.default-staging:3306/ticketmonster -Dliquibase.promptOnNonLocalDatabase=false -Dliquibase.tag=${canaryVersion}"
 
       kubernetesApply(environment: envStage)
 
