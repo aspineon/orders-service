@@ -1,6 +1,8 @@
 #!/usr/bin/groovy
 @Library('github.com/christian-posta/fabric8-pipeline-library@ceposta-db')
 
+import com.cloudbees.groovy.cps.NonCPS
+
 def localItestPattern = ""
 try {
   localItestPattern = ITEST_PATTERN
@@ -78,7 +80,9 @@ podTemplate(label: label, serviceAccount: 'jenkins', containers: [
       echo dbstatus
 
       // figure out how many changes we have:
-      def dbstatuslines = dbstatus.readlines().find{ it.contains('have not been applied')}
+      def dbstatuslines = get_db_status_line(dbstatus)
+
+      echo 'dbstatus lines: '
       echo dbstatuslines
 
       // wait for approval to proceed
@@ -100,4 +104,9 @@ podTemplate(label: label, serviceAccount: 'jenkins', containers: [
 
     }
   }
+}
+
+@NonCPS
+String get_db_status_line(lines){
+  return lines.readlines().find{ it.contains('have not been applied') }
 }
