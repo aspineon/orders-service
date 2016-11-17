@@ -68,8 +68,22 @@ podTemplate(label: label, serviceAccount: 'jenkins', containers: [
 //      }
 
       stage 'Rollout Staging'
-      echo '${envStage}'
-      sh "mvn -Pdb-migration-mysql liquibase:status -Dliquibase.url=jdbc:mysql://mysqlorders.default-staging:3306/ticketmonster -Dliquibase.promptOnNonLocalDatabase=false"
+      echo 'Here are the changes to make:'
+      def dbstatus = sh (
+        returnStdout: true,
+        script: "mvn -Pdb-migration-mysql liquibase:status -Dliquibase.url=jdbc:mysql://mysqlorders.default-staging:3306/ticketmonster -Dliquibase.promptOnNonLocalDatabase=false"
+      ).trim()
+
+      // since we redirect stdout, let's show the log message; stderror should not redirect, so we should see that?
+      echo dbstatus
+
+      // figure out how many changes we have:
+      def dbstatuslines = dbstatus.readlines().find{ it.contains('have not been applied')}
+      echo dbstatuslines
+
+      // wait for approval to proceed
+      input id: 'DBProceed', message: "Please check the DB updates you want to apply"
+//      sh "mvn -Pdb-migration-mysql liquibase:status -Dliquibase.url=jdbc:mysql://mysqlorders.default-staging:3306/ticketmonster -Dliquibase.promptOnNonLocalDatabase=false"
 
       kubernetesApply(environment: envStage)
 
