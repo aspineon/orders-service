@@ -77,17 +77,14 @@ podTemplate(label: label, serviceAccount: 'jenkins', containers: [
       ).trim()
 
       // since we redirect stdout, let's show the log message; stderror should not redirect, so we should see that?
+      // keeping this like this here for now because we may wish to do some pattern matching, etc to see whether or
+      //  not we should prompt for approvale, etc.
       echo dbstatus
 
-      // figure out how many changes we have:
-      def dbstatuslines = get_db_status_line(dbstatus)
-
-      echo 'dbstatus lines: '
-      echo dbstatuslines
 
       // wait for approval to proceed
       input id: 'DBProceed', message: "Please check the DB updates you want to apply"
-//      sh "mvn -Pdb-migration-mysql liquibase:status -Dliquibase.url=jdbc:mysql://mysqlorders.default-staging:3306/ticketmonster -Dliquibase.promptOnNonLocalDatabase=false"
+      sh "mvn -Pdb-migration-mysql liquibase:update -Dliquibase.url=jdbc:mysql://mysqlorders.default-staging:3306/ticketmonster -Dliquibase.promptOnNonLocalDatabase=false"
 
       kubernetesApply(environment: envStage)
 
@@ -106,7 +103,4 @@ podTemplate(label: label, serviceAccount: 'jenkins', containers: [
   }
 }
 
-@NonCPS
-String get_db_status_line(lines){
-  return lines.readlines().find{ it.contains('have not been applied') }
-}
+
